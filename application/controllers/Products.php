@@ -34,13 +34,14 @@ class Products extends CI_Controller {
    {
         
         $orderno=random_string('alnum', 6);
-        $data = array(
-            'orderno'=>$orderno,
-            'ordername' => $this->input->post('ordername'),
-            'customername' => $this->input->post('customername')
-        );
+        
         //echo $this->input->post('submit');die();
-        if(!empty($this->input->post('submit'))){
+        if(!empty($this->input->post('submit')) && !empty($this->input->post('ordername')) && !empty($this->input->post('customername'))){
+            $data = array(
+                'orderno'=>$orderno,
+                'ordername' => $this->input->post('ordername'),
+                'customername' => $this->input->post('customername')
+            );
             $products=new ProductsModel;
             $id=$products->insert_product('orders',$data);
             //echo $id;die();
