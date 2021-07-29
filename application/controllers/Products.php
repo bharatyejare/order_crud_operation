@@ -15,6 +15,7 @@ class Products extends CI_Controller {
    {
        $products=new ProductsModel;
        $data['data']=$products->get_products();
+       //echo "<pre>";print_r($data);die();
        $this->load->view('includes/header');       
        $this->load->view('products/list',$data);
        $this->load->view('includes/footer');
@@ -25,6 +26,15 @@ class Products extends CI_Controller {
       $this->load->view('products/create');
       $this->load->view('includes/footer');      
    }
+
+   public function view($id)
+   {
+      $products=new ProductsModel;
+      $data['data']=$products->edit_products_item($id);
+      $this->load->view('includes/header');
+      $this->load->view('products/view',$data);
+      $this->load->view('includes/footer');      
+   }
    /**
     * Store Data from this method.
     *
@@ -32,31 +42,35 @@ class Products extends CI_Controller {
    */
    public function store()
    {
-        
-        $orderno=random_string('alnum', 6);
-        
-        //echo $this->input->post('submit');die();
-        if(!empty($this->input->post('submit')) && !empty($this->input->post('ordername')) && !empty($this->input->post('customername'))){
+        $orderno=rand();
+        if(!empty($this->input->post('Save')) && !empty($this->input->post('ordername')) && !empty($this->input->post('customername')) && !empty($this->input->post('itemname'))&& !empty($this->input->post('quantity')))
+        {
             $data = array(
                 'orderno'=>$orderno,
                 'ordername' => $this->input->post('ordername'),
                 'customername' => $this->input->post('customername')
             );
             $products=new ProductsModel;
-            $id=$products->insert_product('orders',$data);
-            //echo $id;die();
+            $id=$products->insert_common_function('orders',$data);
+            $item_array=$this->input->post('itemname');
+            $quantity_array=$this->input->post('quantity');
+            $order_details=array();
+            foreach ($item_array as $key => $value) {
+               $order_detail[$key]['item_name']=$value;
+               $order_detail[$key]['quantity']=$quantity_array[$key];
+               $order_detail[$key]['orderid']=$id;
+            }
+            foreach ($order_detail as $key => $value) {
+               $id=$products->insert_common_function('orders_item',$value);
+            }
             if($id){
-               echo "success";
-               die();
+               redirect(base_url('products'));
             }else{
                echo "error";
                die();
             }
-            }else{
-               echo "empty";
-               die();
-            }
-        }
+         }
+   }
    /**
     * Edit Data from this method.
     *
@@ -65,7 +79,8 @@ class Products extends CI_Controller {
    public function edit($id)
    {
        $products=new ProductsModel;
-       $product['product']=$products->edit_products($id); 
+       $product['product']=$products->edit_products('orders',$id); 
+       $product['order_item']=$products->edit_products_item($id); 
        $this->load->view('includes/header');
        $this->load->view('products/edit',$product);
        $this->load->view('includes/footer');   
@@ -77,14 +92,32 @@ class Products extends CI_Controller {
    */
    public function update($id)
    {
-       $products=new ProductsModel;
-       $row=$products->update_product($id);
-       //echo $row;die();
-       if($row==1){
-         redirect(base_url('products'));
-       }
-       //echo $row;die();
-       
+      if(!empty($this->input->post('Save')) && !empty($this->input->post('ordername')) && !empty($this->input->post('customername')) && !empty($this->input->post('itemname'))&& !empty($this->input->post('quantity')))
+        {
+         $products=new ProductsModel;
+         $row=$products->update_product($id);
+         $update_item_array=$this->input->post('itemname');
+         $update_quantity_array=$this->input->post('quantity');
+         $fetch_item_array=$products->edit_products_item($id);
+         $update_order_details=array();
+         foreach ($update_item_array as $key => $value) {
+            $update_order_details[$key]['item_name']=$value;
+            $update_order_details[$key]['quantity']=$update_quantity_array[$key];
+         }
+         foreach ($fetch_item_array as $key => $value) {
+               $update_order_details[$key]['item_id']=$value->item_id;
+         }
+         foreach ($update_order_details as $key => $value) {
+               $id=$products->update_product_items($value,$value['item_id']); 
+         }
+         if($id!==''){
+            redirect(base_url('products'));
+          }
+      }else{
+         echo "Empty";
+         die();
+      }
+      
    }
    /**
     * Delete Data from this method.
@@ -93,8 +126,14 @@ class Products extends CI_Controller {
    */
    public function delete($id)
    {
-       $this->db->where('orderid', $id);
-       $this->db->delete('orders');
-       redirect(base_url('products'));
+      
+      $this->db->from("orders_item");
+      $this->db->where('orders_item.orderid', $id);
+      $this->db->delete('orders_item');
+
+      $this->db->from("orders");
+      $this->db->where('orders.orderid', $id);
+      $this->db->delete('orders');
+      redirect(base_url('products'));
    }
 }

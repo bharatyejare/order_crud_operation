@@ -3,8 +3,10 @@ class ProductsModel extends CI_Model{
     
     public function get_products() {
         try {
-                $query = $this->db->get("orders");
-                return $query->result();
+            $this->db->select('orders.orderid,orders.orderno, orders.ordername,orders.customername')
+            ->from('orders');
+            $query = $this->db->get();
+            return $query->result();
             
         } catch (Exception $e) {
             exit("There is an error in the select query");
@@ -12,11 +14,12 @@ class ProductsModel extends CI_Model{
         
     } 
     
-    public function edit_products($id) {
+    public function edit_products($table_name,$id) {
         try {
-            if (!empty($id)) {
+            if (!empty($table_name) && !empty($id)) {
                 
-                $query = $this->db->get_where('orders', array('orderid' => $id))->row();
+                $query = $this->db->get_where($table_name, array('orderid' => $id))->row();
+                //echo $this->db->last_query();//die();
                 return $query;
                 
             } else {
@@ -29,7 +32,21 @@ class ProductsModel extends CI_Model{
         
     }
     
-    public function insert_product($table_name, $records = array()) {
+    public function edit_products_item($id) {
+        try {
+            $this->db->select('*')
+            ->from('orders_item')->where('orderid',$id);
+            $query = $this->db->get();
+            //echo $this->db->last_query();die();
+            return $query->result();
+            
+        } catch (Exception $e) {
+            exit("There is an error in the select query");
+        }
+        
+    }
+    
+    public function insert_common_function($table_name, $records = array()) {
         try {
             if (is_array($records) && !empty($records) && $table_name != '') {
                 
@@ -64,5 +81,21 @@ class ProductsModel extends CI_Model{
         }
         
     }
+
+    public function update_product_items($data,$item_id) {
+        try {
+            if ($item_id!='') { 
+                $this->db->where('item_id',$item_id);
+                $this->db->update('orders_item',$data);
+            } else {
+                return false;
+            }
+            
+        } catch (Exception $e) {
+            exit("There is an error in the update query");
+        }
+        
+    }
+    
 }
 ?>
