@@ -15,4 +15,16 @@ CREATE TABLE `orders` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
--- 2021-07-28 10:24:31
+DROP TABLE IF EXISTS `orders_item`;
+CREATE TABLE `orders_item` (
+  `item_id` int(11) NOT NULL AUTO_INCREMENT,
+  `orderid` int(11) NOT NULL,
+  `item_name` varchar(20) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  PRIMARY KEY (`item_id`),
+  KEY `orderid` (`orderid`),
+  CONSTRAINT `orders_item_ibfk_1` FOREIGN KEY (`orderid`) REFERENCES `orders` (`orderid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- 2021-07-29 15:05:26

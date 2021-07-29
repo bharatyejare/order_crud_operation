@@ -42,7 +42,7 @@ function myFunction() {
     var item='<?php echo json_encode($order_item); ?>';
     var order_data = JSON.parse(item);
 
-    console.log(order_data[1]['orderid']);
+    //console.log(order_data[1]['orderid']);
     //return false;
   for(var i=0;i<count;i++){
       //console.log(i);
