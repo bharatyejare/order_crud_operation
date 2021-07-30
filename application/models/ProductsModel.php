@@ -96,6 +96,35 @@ class ProductsModel extends CI_Model{
         }
         
     }
+
+    public function delete_items($item_id) {
+        try {
+            if ($item_id!='') { 
+                $this->db->from("orders_item");
+                $this->db->where('orders_item.orderid', $item_id);
+                $this->db->delete('orders_item');
+                //echo "<pre>";print_r($this->db->last_query());die();
+            } else {
+                return false;
+            }
+            
+        } catch (Exception $e) {
+            exit("There is an error in the delete query");
+        }
+        
+    }
+    public function delete($id)
+   {
+      
+      $this->db->from("orders_item");
+      $this->db->where('orders_item.orderid', $id);
+      $this->db->delete('orders_item');
+
+      $this->db->from("orders");
+      $this->db->where('orders.orderid', $id);
+      $this->db->delete('orders');
+      redirect(base_url('products'));
+   }
     
 }
 ?>

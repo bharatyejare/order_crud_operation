@@ -42,6 +42,7 @@ class Products extends CI_Controller {
    */
    public function store()
    {
+      
         $orderno=rand();
         if(!empty($this->input->post('Save')) && !empty($this->input->post('ordername')) && !empty($this->input->post('customername')) && !empty($this->input->post('itemname'))&& !empty($this->input->post('quantity')))
         {
@@ -92,10 +93,17 @@ class Products extends CI_Controller {
    */
    public function update($id)
    {
+      //echo "<pre>";print_r($this->input->post());die();
       if(!empty($this->input->post('Save')) && !empty($this->input->post('ordername')) && !empty($this->input->post('customername')) && !empty($this->input->post('itemname'))&& !empty($this->input->post('quantity')))
         {
          $products=new ProductsModel;
          $row=$products->update_product($id);
+         $delete_items_array=$this->input->post('hiddenelement');
+         if(isset($delete_items_array)){
+         foreach ($delete_items_array as $key => $value) {
+            $delete_id=$products->delete_items($value); 
+         }
+      }
          $update_item_array=$this->input->post('itemname');
          $update_quantity_array=$this->input->post('quantity');
          $fetch_item_array=$products->edit_products_item($id);
@@ -106,6 +114,7 @@ class Products extends CI_Controller {
          }
          foreach ($fetch_item_array as $key => $value) {
                $update_order_details[$key]['item_id']=$value->item_id;
+               $update_order_details[$key]['orderid']=$value->orderid;
          }
          foreach ($update_order_details as $key => $value) {
                $id=$products->update_product_items($value,$value['item_id']); 
