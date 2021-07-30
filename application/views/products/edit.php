@@ -5,8 +5,7 @@
 <form method="post" action="<?php echo base_url('products/update/'.$product->orderid);?>">
 <div class="col-md-12">
                 <div class="col-md-6" id="hidden" style="margin-left:90px;">
-                
-            </div>
+                </div>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="form-group">
@@ -27,9 +26,7 @@
         <div class="col-md-12">
                 <div class="col-md-6" id="show" style="margin-left:90px;">
                 
-            </div>
-            
-            
+            </div>  
         </div>
         <div class="col-md-8 col-md-offset-2">
             <div class="form-group">    
@@ -54,17 +51,12 @@
 <script>
     b=0;
 function myFunction() {
-   
-    var count='<?php echo count($order_item); ?>';
-    var item='<?php echo json_encode($order_item); ?>';
-    var order_data = JSON.parse(item);
+var count='<?php echo count($order_item); ?>';
+var item='<?php echo json_encode($order_item); ?>';
+var order_data = JSON.parse(item);
 
-    //console.log(order_data[1]['orderid']);
-    //return false;
-  for(var i=0;i<count;i++){
-    b++;
-      //console.log(i);
-   // console.log(order_data[i]['orderid']);
+for(var i=0;i<count;i++){
+  b++;
   var label1 = document.createElement("label");
   var br1 = document.createElement("br");
   var input1 = document.createElement("input");
@@ -77,7 +69,6 @@ function myFunction() {
   var input2 = document.createElement("input");
   label2.innerHTML = "Quantity";
   var input_hidden = document.createElement("input");
-  //h.appendChild(t);
   document.getElementById("show").appendChild(label1);
   document.getElementById("show").appendChild(input1);
   document.getElementById("hidden").appendChild(input_hidden);
@@ -91,10 +82,8 @@ function myFunction() {
   label1.setAttribute("class","col-md-3");
   input1.setAttribute("style", "margin-left:180px;");
   input1.setAttribute("value", order_data[i]['item_name']);
-  //h.appendChild(t);
   document.getElementById("show").appendChild(label2);
   document.getElementById("show").appendChild(input2);
-  //document.getElementById("show").appendChild(br2);
   
   input2.setAttribute("id", "quantity"+b);
   input2.setAttribute("name", "quantity[]");
@@ -114,21 +103,14 @@ function myFunction() {
   input_hidden.setAttribute("class", "form-control");
   input_hidden.setAttribute("style", "margin-left:180px;");
   input_hidden.setAttribute("value", "");
-  //button.setAttribute('onclick','removeitem();'); // for FF
-  button.onclick = function() {removeitem();}; // for IE
-
-  //document.getElementById('removeitem').onclick = removeitem();
-
-  //document.getElementById('removeitem').setAttribute('onclick','removeitem()')
+  button.onclick = function() {removeitem();}; 
 
 }
 
 }
 m=0;
 function additem() {
-    m++;
-    //alert(m);
-   // document.getElementById('inc').value = i;
+  m++;
   var label1 = document.createElement("label");
   var br1 = document.createElement("br");
   var input1 = document.createElement("input");
@@ -168,18 +150,12 @@ function additem() {
   button.setAttribute("name", "removeitem");
   button.setAttribute("value", "Remove Item");
   button.setAttribute("style", "margin-left:81%;");
-  button.onclick = function() {addremoveitem();}; // for IE
- // document.getElementById('itemname').onclick = removeitem();
+  button.onclick = function() {addremoveitem();};
 }
 n=0;
 function removeitem(){
     n++;
-    
-    //console.log(order_data[1]['orderid']);
-    //return false;
-    
-    //alert(document.getElementById("removeitem"+n).value);
-     document.getElementById("hiddenelement"+n).value = document.getElementById("removeitem"+n).value;
+    document.getElementById("hiddenelement"+n).value = document.getElementById("removeitem"+n).value;
     document.getElementById("itemname"+n).style.display = "none";
     document.getElementById("quantity"+n).style.display = "none";
     document.getElementById("removeitem"+n).style.display = "none";
