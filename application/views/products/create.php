@@ -33,7 +33,7 @@
         <button type="button" onclick="myFunction()">Add Item</button>
         </div>
         <div class="col-md-8 col-md-offset-2 pull-right">
-            <input type="submit" name="Save" class="btn" value="submit" id="submit">
+            <input type="submit" name="Save" class="btn" value="submit" id="submit" style="margin-left:30%;">
         </div>
 
 </div>

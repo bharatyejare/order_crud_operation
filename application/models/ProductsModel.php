@@ -45,12 +45,28 @@ class ProductsModel extends CI_Model{
         }
         
     }
+
+    public function item_num_rows($id) {
+        try {
+            $this->db->select('item_id')
+            ->from('orders_item')->where('item_id',$id);
+            $query = $this->db->get();
+            //echo $this->db->last_query();die();
+            return  $query->num_rows();
+
+            
+        } catch (Exception $e) {
+            exit("There is an error in the select query");
+        }
+        
+    }
     
     public function insert_common_function($table_name, $records = array()) {
         try {
             if (is_array($records) && !empty($records) && $table_name != '') {
                 
                 $this->db->insert($table_name, $records);
+                //echo $this->db->last_query();die();
                 return $this->db->insert_id();
                 
             } else {
@@ -86,7 +102,8 @@ class ProductsModel extends CI_Model{
         try {
             if ($item_id!='') { 
                 $this->db->where('item_id',$item_id);
-                $this->db->update('orders_item',$data);
+                return $this->db->update('orders_item',$data);
+                 //echo $this->db->last_query();die();
             } else {
                 return false;
             }
@@ -98,19 +115,10 @@ class ProductsModel extends CI_Model{
     }
 
     public function delete_items($item_id) {
-        try {
-            if ($item_id!='') { 
-                $this->db->from("orders_item");
-                $this->db->where('orders_item.orderid', $item_id);
-                $this->db->delete('orders_item');
-                //echo "<pre>";print_r($this->db->last_query());die();
-            } else {
-                return false;
-            }
-            
-        } catch (Exception $e) {
-            exit("There is an error in the delete query");
-        }
+        $this->db->from("orders_item");
+        $this->db->where('orders_item.item_id', $item_id);
+        $this->db->delete('orders_item');
+        //echo "<pre>";print_r($this->db->last_query());//die();
         
     }
     public function delete($id)

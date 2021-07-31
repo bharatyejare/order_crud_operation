@@ -93,32 +93,54 @@ class Products extends CI_Controller {
    */
    public function update($id)
    {
-      //echo "<pre>";print_r($this->input->post());die();
       if(!empty($this->input->post('Save')) && !empty($this->input->post('ordername')) && !empty($this->input->post('customername')) && !empty($this->input->post('itemname'))&& !empty($this->input->post('quantity')))
         {
          $products=new ProductsModel;
          $row=$products->update_product($id);
-         $delete_items_array=$this->input->post('hiddenelement');
-         if(isset($delete_items_array)){
-         foreach ($delete_items_array as $key => $value) {
-            $delete_id=$products->delete_items($value); 
-         }
-      }
          $update_item_array=$this->input->post('itemname');
          $update_quantity_array=$this->input->post('quantity');
+         if(!empty($this->input->post('newhiddenelement'))){
+           $newhiddenelement_value=$this->input->post('newhiddenelement');
+         }else{
+            $newhiddenelement_value='0';
+         }
          $fetch_item_array=$products->edit_products_item($id);
          $update_order_details=array();
          foreach ($update_item_array as $key => $value) {
             $update_order_details[$key]['item_name']=$value;
             $update_order_details[$key]['quantity']=$update_quantity_array[$key];
+            $update_order_details[$key]['orderid']=$id;
+            if(!empty($this->input->post('newhiddenelement'))){
+              $update_order_details[$key]['hiddenid']=$newhiddenelement_value[$key];
+            }
+         }
+         foreach ($update_order_details as $key => $value) {
+            if(!empty($this->input->post('newhiddenelement'))){
+            if($update_order_details[$key]['hiddenid']!=='' || $update_order_details[$key]['hiddenid']==''){
+             unset($update_order_details[$key]['hiddenid']);
+            }
+         }
          }
          foreach ($fetch_item_array as $key => $value) {
                $update_order_details[$key]['item_id']=$value->item_id;
-               $update_order_details[$key]['orderid']=$value->orderid;
+               
          }
+       
          foreach ($update_order_details as $key => $value) {
-               $id=$products->update_product_items($value,$value['item_id']); 
+            $item_id_num_rows=$products->item_num_rows($value['item_id']);
+            if($item_id_num_rows==0){
+            $id=$products->insert_common_function('orders_item',$value); 
+         }else{
+            $id=$products->update_product_items($value,$value['item_id']); 
          }
+      }
+      $delete_items_array=$this->input->post('hiddenelement');
+         if(isset($delete_items_array)){
+         foreach ($delete_items_array as $key => $value) {
+            $delete_id=$products->delete_items($value); 
+         }
+      }
+      
          if($id!==''){
             redirect(base_url('products'));
           }
