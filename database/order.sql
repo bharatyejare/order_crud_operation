@@ -7,24 +7,24 @@ SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
-  `orderid` int(11) NOT NULL AUTO_INCREMENT,
-  `orderno` varchar(255) NOT NULL,
-  `ordername` varchar(255) NOT NULL,
-  `customername` varchar(255) NOT NULL,
-  PRIMARY KEY (`orderid`)
+  `order_id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` varchar(255) NOT NULL,
+  `order_name` varchar(255) NOT NULL,
+  `customer_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-DROP TABLE IF EXISTS `orders_item`;
-CREATE TABLE `orders_item` (
+DROP TABLE IF EXISTS `order_items`;
+CREATE TABLE `order_items` (
   `item_id` int(11) NOT NULL AUTO_INCREMENT,
-  `orderid` int(11) NOT NULL,
-  `item_name` varchar(20) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `items_name` varchar(20) NOT NULL,
   `quantity` int(11) NOT NULL,
   PRIMARY KEY (`item_id`),
-  KEY `orderid` (`orderid`),
-  CONSTRAINT `orders_item_ibfk_1` FOREIGN KEY (`orderid`) REFERENCES `orders` (`orderid`)
+  KEY `orderid` (`order_id`),
+  CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
--- 2021-07-29 15:05:26
+-- 2021-08-02 14:29:46
