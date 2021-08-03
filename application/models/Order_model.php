@@ -1,13 +1,28 @@
 <?php
 class Order_model extends CI_Model{
 
-    public function insert_data($table_name, $records = array()) {
+    public function insert_order($table_name, $records = array()) {
         try {
             if (is_array($records) && !empty($records) && $table_name != '') {
                 
                 $this->db->insert($table_name, $records);
-                //echo $this->db->last_query();//die();
                 return $this->db->insert_id();
+                
+            } else {
+                return false;
+            }
+            
+        } catch (Exception $e) {
+            exit("There is an error in the insert query");
+        }
+        
+    }
+    public function insert_order_items($table_name, $records = array()) {
+        try {
+            if (is_array($records) && !empty($records) && $table_name != '') {
+                
+                $this->db->insert($table_name, $records);
+                 return $this->db->insert_id();
                 
             } else {
                 return false;
@@ -21,7 +36,7 @@ class Order_model extends CI_Model{
     
     public function get_orders() {
         try {
-            $this->db->select('orders.order_id,orders.order_no, orders.order_name,orders.customer_name')
+            $this->db->select('orders.order_id, orders.order_name,orders.customer_name')
             ->from('orders');
             $query = $this->db->get();
             return $query->result();
@@ -31,6 +46,20 @@ class Order_model extends CI_Model{
         }
         
     } 
+
+    public function get_order_items($order_id) {
+        try {
+            $this->db->select('*')
+            ->from('order_items')->where('order_id',$order_id);
+            $query = $this->db->get();
+           // echo $this->db->last_query();die();
+            return $query->result();
+            
+        } catch (Exception $e) {
+            exit("There is an error in the select query");
+        }
+        
+    }
     
     public function edit_order($table_name,$id) {
         try {
@@ -55,7 +84,7 @@ class Order_model extends CI_Model{
             $this->db->select('*')
             ->from('order_items')->where('order_id',$id);
             $query = $this->db->get();
-            //echo $this->db->last_query();die();
+           // echo $this->db->last_query();die();
             return $query->result();
             
         } catch (Exception $e) {
@@ -64,15 +93,12 @@ class Order_model extends CI_Model{
         
     }
     
-    public function update_order($id) {
+    public function update_order($id,$order) {
         try {
             if (!empty($id)) {
-                $data=array(
-                    'order_name' => $this->input->post('ordername'),
-                    'customer_name'=> $this->input->post('customername')
-                );
                 $this->db->where('order_id',$id);
-                return $this->db->update('orders',$data);     
+                return $this->db->update('orders',$order);   
+                //echo $this->db->last_query();die();  
                 
             } else {
                 return false;
@@ -84,11 +110,11 @@ class Order_model extends CI_Model{
         
     }
 
-    public function update_order_item($data,$item_id) {
+    public function update_order_item($items,$item_id) {
         try {
             if ($item_id!='') { 
                 $this->db->where('item_id',$item_id);
-                return $this->db->update('order_items',$data);
+                 return $this->db->update('order_items',$items);
                 //echo $this->db->last_query()."<br>";//die();
             } else {
                 return false;
@@ -100,10 +126,10 @@ class Order_model extends CI_Model{
         
     }
 
-    public function delete_item($item_id) {
+    public function delete_order_items($item_id) {
         $this->db->from("order_items");
         $this->db->where('order_items.item_id', $item_id);
-        return  $this->db->delete('order_items');
+          $this->db->delete('order_items');
         //echo "<pre>";print_r($this->db->last_query());//die();
         
     }

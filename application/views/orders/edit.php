@@ -11,7 +11,7 @@
             <div class="form-group" >
                 <label class="col-md-3" style="margin-right:45%;">Order Name</label>
                 <div class="col-md-9">
-                    <input type="text" name="ordername" class="form-control" value="<?php echo $orders->order_name; ?>" >
+                    <input type="text" name="orders[order_name]" class="form-control" value="<?php echo $orders->order_name; ?>" >
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
             <div class="form-group">
                 <label class="col-md-3" style="margin-right:45%;">Customer Name</label>
                 <div class="col-md-9">
-                    <textarea name="customername" class="form-control"><?php echo $orders->customer_name; ?></textarea>
+                    <textarea name="orders[customer_name]" class="form-control"><?php echo $orders->customer_name; ?></textarea>
                 </div>
             </div>
         </div>
@@ -79,20 +79,20 @@ for(var i=0;i<count;i++){
 
   label1.setAttribute("id", "newitem_label"+order_data[i]['item_id']);
   label2.setAttribute("id", "newquantity_label"+order_data[i]['item_id']);
-  input1.setAttribute("id", "itemname"+order_data[i]['item_id']);
-  input1.setAttribute("name", "itemname[]");
+  input1.setAttribute("id", "item_name"+order_data[i]['item_id']);
+  input1.setAttribute("name", "item_name[]");
   input1.setAttribute("class", "form-control");
   label1.setAttribute("style","margin-left:3%;margin:bottom:20%;");
   input1.setAttribute("style", "margin-left:5px;");
-  input1.setAttribute("value", order_data[i]['items_name']);
+  input1.setAttribute("value", order_data[i]['item_name']);
   
   
-  input2.setAttribute("id", "quantity"+order_data[i]['item_id']);
-  input2.setAttribute("name", "quantity[]");
+  input2.setAttribute("id", "qty"+order_data[i]['item_id']);
+  input2.setAttribute("name", "qty[]");
   input2.setAttribute("class", "form-control");
   label2.setAttribute("style","margin-left:0.5%;");
   input2.setAttribute("style", "margin-left:0.5%;");
-  input2.setAttribute("value", order_data[i]['quantity']);
+  input2.setAttribute("value", order_data[i]['qty']);
   button.setAttribute("id", "removeitem"+order_data[i]['item_id']);
   button.setAttribute("type", "button");
   button.setAttribute("name", "removeitem");
@@ -138,13 +138,13 @@ function additem() {
   label2.setAttribute("id", "newquantitylabel"+m);
 
   input1.setAttribute("id", "newitem"+m);
-  input1.setAttribute("name", "itemname[]");
+  input1.setAttribute("name", "new_item_name[]");
   input1.setAttribute("class", "form-control");
   label1.setAttribute("style","margin-left:3%;margin:bottom:20%;");
   input1.setAttribute("style", "margin-left:5px;");
 
   input2.setAttribute("id", "newquantity"+m);
-  input2.setAttribute("name", "quantity[]");
+  input2.setAttribute("name", "new_qty[]");
   input2.setAttribute("class", "form-control");
   label2.setAttribute("class","margin-left:3%;margin:bottom:20%;");
   input2.setAttribute("style", "margin-left:5px;");
@@ -169,8 +169,8 @@ function additem() {
 function removeitem(item_id){
     document.getElementById("hiddenelement"+item_id).value = item_id;
     if(item_id!==''){
-        document.getElementById("itemname"+item_id).style.display = "none";
-        document.getElementById("quantity"+item_id).style.display = "none";
+        document.getElementById("item_name"+item_id).style.display = "none";
+        document.getElementById("qty"+item_id).style.display = "none";
         document.getElementById("removeitem"+item_id).style.display = "none";
         document.getElementById("newitem_label"+item_id).style.display = "none";
         document.getElementById("newquantity_label"+item_id).style.display = "none";
@@ -178,7 +178,6 @@ function removeitem(item_id){
 }
 
 function addremoveitem(rowid){
-    //alert(rowid);
     if(rowid!==''){
         document.getElementById("newhiddenelement"+rowid).value = "Deleted";
         document.getElementById("newitem"+rowid).style.display = "none";

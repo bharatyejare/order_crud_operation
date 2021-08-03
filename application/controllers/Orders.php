@@ -13,11 +13,10 @@ class Orders extends CI_Controller {
    }
    public function index()
    {
-       $orders=new Order_model;
-       $data['data']=$orders->get_orders();
-       //echo "<pre>";print_r($data);die();
+       $order = new Order_model;  
+       $data['orders'] = $order->get_orders();
        $this->load->view('includes/header');       
-       $this->load->view('orders/list',$data);
+       $this->load->view('orders/index',$data);
        $this->load->view('includes/footer');
    }
    public function create()
@@ -27,10 +26,9 @@ class Orders extends CI_Controller {
       $this->load->view('includes/footer');      
    }
 
-   public function view($id)
-   {
-      $orders=new Order_model;
-      $data['data']=$orders->edit_order_item($id);
+   public function view($item_id)
+   {  $order = new Order_model;  
+      $data['orders'] = $order->get_order_items($item_id);
       $this->load->view('includes/header');
       $this->load->view('orders/view',$data);
       $this->load->view('includes/footer');      
@@ -41,46 +39,26 @@ class Orders extends CI_Controller {
     * @return Response
    */
    public function store()
-   {
-      
-        $orderno=rand();
-        if(!empty($this->input->post('Save')) && !empty($this->input->post('ordername')) && !empty($this->input->post('customername')) && !empty($this->input->post('itemname'))&& !empty($this->input->post('quantity')))
-        {
-            $data = array(
-                'order_no'=>$orderno,
-                'order_name' => $this->input->post('ordername'),
-                'customer_name' => $this->input->post('customername')
-            );
-            $orders=new Order_model;
-            if(!empty($data)){
-             $id=$orders->insert_data('orders',$data);
-             
-            }
-            $item_array=$this->input->post('itemname');
-            $quantity_array=$this->input->post('quantity');
-            $order_details=array();
-            foreach ($item_array as $key => $value) {
-               $order_detail[$key]['items_name']=$value;
-               $order_detail[$key]['quantity']=$quantity_array[$key];
-               $order_detail[$key]['order_id']=$id;
-            }
-            foreach ($order_detail as $key => $value) {
-               if(empty($value['order_id'])){
-                 echo "Please Enter data";
-                 die();
-               }else{
-                  $id=$orders->insert_data('order_items',$value);
-                  redirect(base_url('orders'));
-               }
-            }
-            if($id){
-               redirect(base_url('orders'));
+   {    
+            $order=new Order_model;
+            if($_POST['orders']['order_name']!=='' && $_POST['orders']['customer_name']!==''){
+            $order_id=$order->insert_order('orders',$_POST['orders']);
+           }else{
+            echo "error";
+            die();
+         }
+            foreach($_POST['order_items'] as $key => $value){
+            if($value['item_name']!=='' && $value['qty']!=='' ){
+               $value['order_id']=$order_id;
+               $item_id=$order->insert_order_items('order_items',$value);
+               redirect('orders');
             }else{
                echo "error";
                die();
             }
          }
-      }
+      
+   }
    /**
     * Edit Data from this method.
     *
@@ -100,75 +78,44 @@ class Orders extends CI_Controller {
     *
     * @return Response
    */
-   public function update($id)
-   {
-      if(!empty($this->input->post('Save')) && !empty($this->input->post('ordername')) && !empty($this->input->post('customername')) && !empty($this->input->post('itemname'))&& !empty($this->input->post('quantity')))
-        {
-         $orders=new Order_model;
-         $data=$orders->update_order($id);
-         $update_item_array=$this->input->post('itemname');
-         $update_quantity_array=$this->input->post('quantity');
-         if(!empty($this->input->post('newhiddenelement'))){
-           $newhiddenelement_value=$this->input->post('newhiddenelement');
-         }else{
-            $newhiddenelement_value='0';
-         }
-         $fetch_item_array=$orders->edit_order_item($id);
-         $update_order_details=array();
-         foreach ($update_item_array as $key => $value) {
-            $update_order_details[$key]['items_name']=$value;
-            $update_order_details[$key]['quantity']=$update_quantity_array[$key];
-            $update_order_details[$key]['order_id']=$id;
-            if(!empty($this->input->post('newhiddenelement'))){
-              $update_order_details[$key]['hiddenid']=$newhiddenelement_value[$key];
-            }
-         }
-         foreach ($update_order_details as $key => $value) {
-            if(!empty($this->input->post('newhiddenelement'))){
-            if($update_order_details[$key]['hiddenid']!=='' || $update_order_details[$key]['hiddenid']==''){
-             unset($update_order_details[$key]['hiddenid']);
-            }
-         }
-         }
-         foreach ($fetch_item_array as $key => $value) {
-               $update_order_details[$key]['item_id']=$value->item_id;
-               
-         }
-
-         $delete_items_array=$this->input->post('hiddenelement');
-         if(isset($delete_items_array)){
-         foreach ($delete_items_array as $key => $value) {
-            $delete_id=$orders->delete_item($value); 
-            
-         }
-      
-         foreach ($update_order_details as $key => $value) {
-           
-            if(empty($value['item_id']) && $newhiddenelement_value[$key]=='Deleted'){
-            unset($update_order_details);
-            }elseif(!empty($value['item_id']) && $newhiddenelement_value[$key]==0){
-              $id=$orders->update_order_item($value,$value['item_id']); 
-            }elseif(!empty($value['item_id']) && $newhiddenelement_value[$key]==1){
-              $id=$orders->update_order_item($value,$value['item_id']); 
-            }elseif(!empty($value['item_id']) && $value['item_id']!==''){
-               unset($update_order_details);
-             }elseif(empty($value['item_id']) && $newhiddenelement_value[$key]==1){
-               $id=$orders->insert_data('order_items',$value);
-            }else{
-               if(empty($value['item_id']) && !empty($value['order_id'])){
-                 $id=$orders->insert_data('order_items',$value);
+   public function update($order_id){
+            $order=new Order_model();
+            $order_id_update=$order->update_order($order_id,$_POST['orders']); 
+            $delete_order_items=$_POST['hiddenelement'];
+            if(isset($delete_order_items)){
+               foreach ($delete_order_items as $key => $value) {
+                  $delete_id=$order->delete_order_items($value); 
                }
             }
-         }     
-            if($id!==''){
-            redirect(base_url('orders'));
-            }
-            }else{
-            echo "Empty";
-            die();
+            $items=$order->get_order_items($order_id);
+            $update_order_details=array();
+            foreach ($items as $key => $value) {
+               $update_order_details[$key]['item_name']=$_POST['item_name'][$key];
+               $update_order_details[$key]['qty']=$_POST['qty'][$key];
+               $update_order_details[$key]['order_id']=$order_id;
+               $update_order_details[$key]['item_id']=$value->item_id;
+            }  
+            $insert_order_items=array();
+            foreach ($_POST['new_item_name'] as $key => $value) {
+               if($_POST['new_item_name'][$key]!=='' && $_POST['new_qty'][$key]!=='' && $_POST['newhiddenelement'][$key]!=='Deleted'){
+               $insert_order_items[$key]['item_name']=$_POST['new_item_name'][$key];
+               $insert_order_items[$key]['qty']=$_POST['new_qty'][$key];
+               $insert_order_items[$key]['order_id']=$order_id;
+               $item_id=$order->insert_order_items('order_items',$insert_order_items[$key]);
             }
          }
-      }
+         
+            foreach($update_order_details as $key =>$value){
+               $item_id=$order->update_order_item($value,$value['item_id']);
+            }
+            if($item_id!==''){
+               redirect(base_url('orders'));
+            }else{
+               echo "Empty";
+               die();
+            }       
+      }   
+              
    /**
     * Delete Data from this method.
     *

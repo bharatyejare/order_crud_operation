@@ -10,7 +10,7 @@
             <div class="form-group">
                 <label class="col-md-3">Order Name</label>
                 <div class="col-md-9">
-                    <input type="text" name="ordername" id="ordername" class="form-control">
+                    <input type="text" name="orders[order_name]" id="order_name" class="form-control">
                 </div>
             </div>
         </div>
@@ -18,7 +18,7 @@
             <div class="form-group">
                 <label class="col-md-3">Customer Name</label>
                 <div class="col-md-9">
-                    <textarea name="customername" id="customername" class="form-control"></textarea>
+                    <textarea name="orders[customer_name]" id="customer_name" class="form-control"></textarea>
                 </div>
             </div>
         </div>
@@ -60,8 +60,8 @@ function myFunction() {
   document.getElementById("show").appendChild(input1);
   document.getElementById("show").appendChild(br1);
   document.getElementById("show").appendChild(button);
-  input1.setAttribute("id", "itemname"+m);
-  input1.setAttribute("name", "itemname[]");
+  input1.setAttribute("id", "item_name"+m);
+  input1.setAttribute("name", "order_items["+m+"][item_name]");
   input1.setAttribute("class", "form-control");
   label1.setAttribute("class","col-md-3");
   input1.setAttribute("style", "margin-left:180px;");
@@ -69,8 +69,8 @@ function myFunction() {
   document.getElementById("show").appendChild(label2);
   document.getElementById("show").appendChild(input2);
   document.getElementById("show").appendChild(br2);
-  input2.setAttribute("id", "quantity"+m);
-  input2.setAttribute("name", "quantity[]");
+  input2.setAttribute("id", "qty"+m);
+  input2.setAttribute("name", "order_items["+m+"][qty]");
   input2.setAttribute("class", "form-control");
   label2.setAttribute("class","col-md-3");
   input2.setAttribute("style", "margin-left:172px;");
@@ -90,10 +90,10 @@ function addremoveitem(rowid){
     //alert(rowid);
     if(rowid!==''){
         //document.getElementById("newhiddenelement"+rowid).value = rowid;
-        document.getElementById("itemname"+rowid).style.display = "none";
+        document.getElementById("item_name"+rowid).style.display = "none";
         document.getElementById("newitemlabel"+rowid).style.display = "none";
         document.getElementById("newquantitylabel"+rowid).style.display = "none";
-        document.getElementById("quantity"+rowid).style.display = "none";
+        document.getElementById("qty"+rowid).style.display = "none";
         document.getElementById("newremoveitem"+rowid).style.display = "none";
     }
 }
