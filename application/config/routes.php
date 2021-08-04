@@ -57,3 +57,4 @@ $route['ordersCreate']['post'] = "orders/store";
 $route['ordersEdit/(:any)'] = "orders/edit/$1";
 $route['ordersUpdate/(:any)']['put'] = "orders/update/$1";
 $route['ordersDelete/(:any)']['delete'] = "orders/delete/$1";
+$route['upload']="upload/index";
