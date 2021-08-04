@@ -11,7 +11,7 @@
             <div class="form-group">
                 <label class="col-md-3">Order Name</label>
                 <div class="col-md-9">
-                    <input type="text" name="orders[order_name]" id="order_name" class="form-control">
+                    <input type="text" name="orders[order_name]" id="order_name" class="form-control"></input>
                 </div>
             </div>
         </div>
@@ -34,7 +34,8 @@
         <button type="button" onclick="myFunction()">Add Item</button>
         </div>
         <div class="col-md-8 col-md-offset-2 pull-right">
-            <input type="submit" name="Save" class="btn" value="submit" id="submit" style="margin-left:30%;">
+            <input type="submit" name="Save" class="btn" value="submit" id="submit" style="margin-left:30%;"></input>
+
         </div>
 
 </div>

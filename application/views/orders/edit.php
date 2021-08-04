@@ -11,7 +11,8 @@
             <div class="form-group" >
                 <label class="col-md-3" style="margin-right:45%;">Order Name</label>
                 <div class="col-md-9">
-                    <input type="text" name="orders[order_name]" class="form-control" value="<?php echo $orders->order_name; ?>" >
+                    <input type="text" name="orders[order_name]" class="form-control" value="<?php echo $orders->order_name; ?>" ></input>
+
                 </div>
             </div>
         </div>
@@ -41,7 +42,8 @@
         <button type="button" onclick="additem()" style="margin-left:43%;">Add Item</button>
         </div>
         <div class="col-md-8 col-md-offset-2 pull-right">
-            <input type="submit" name="Save" class="btn" style="margin-left:6%;">
+            <input type="submit" name="Save" class="btn" style="margin-left:6%;"></input>
+
         </div>
     </div>
     
