@@ -11,7 +11,7 @@ class Upload extends CI_Controller {
         $this->load->model('Upload_model');         
         $this->load->library('form_validation');
     }
-    public function index(){
+    public function upload(){
         $this->load->view('includes/header');       
         $this->load->view('upload');
         $this->load->view('includes/footer');
