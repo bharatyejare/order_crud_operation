@@ -127,9 +127,8 @@ class Order_model extends CI_Model{
     }
 
     public function delete_order_items($item_id) {
-        $this->db->from("order_items");
         $this->db->where('order_items.item_id', $item_id);
-          $this->db->delete('order_items');
+        $this->db->delete('order_items');
         //echo "<pre>";print_r($this->db->last_query());//die();
         
     }

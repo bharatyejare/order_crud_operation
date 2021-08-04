@@ -39,24 +39,32 @@ class Orders extends CI_Controller {
     * @return Response
    */
    public function store()
-   {    
+   {       
             $order=new Order_model;
             if($_POST['orders']['order_name']!=='' && $_POST['orders']['customer_name']!==''){
             $order_id=$order->insert_order('orders',$_POST['orders']);
+            echo "Success";
            }else{
             echo "error";
             die();
          }
-            foreach($_POST['order_items'] as $key => $value){
-            if($value['item_name']!=='' && $value['qty']!=='' ){
-               $value['order_id']=$order_id;
-               $item_id=$order->insert_order_items('order_items',$value);
-               redirect('orders');
-            }else{
-               echo "error";
-               die();
-            }
+
+         $insert_order_items=array();
+         //echo "<pre>";print_r($_POST['order_items']);die();
+         if(!empty($_POST['order_items'])){
+         foreach ($_POST['new_item_name'] as $key => $value) {
+            if($value['newhiddenelement']==''){
+            $insert_order_items[$key]['item_name']=$_POST['order_items'][$key]['item_name'];
+            $insert_order_items[$key]['qty']=$_POST['order_items'][$key]['qty'];
+            $insert_order_items[$key]['order_id']=$order_id;
+            $item_id=$order->insert_order_items('order_items',$insert_order_items[$key]);
+           
          }
+      }
+      redirect('orders');
+   }
+      
+      //die();
       
    }
    /**
@@ -81,12 +89,7 @@ class Orders extends CI_Controller {
    public function update($order_id){
             $order=new Order_model();
             $order_id_update=$order->update_order($order_id,$_POST['orders']); 
-            $delete_order_items=$_POST['hiddenelement'];
-            if(isset($delete_order_items)){
-               foreach ($delete_order_items as $key => $value) {
-                  $delete_id=$order->delete_order_items($value); 
-               }
-            }
+            
             $items=$order->get_order_items($order_id);
             $update_order_details=array();
             foreach ($items as $key => $value) {
@@ -108,6 +111,17 @@ class Orders extends CI_Controller {
             foreach($update_order_details as $key =>$value){
                $item_id=$order->update_order_item($value,$value['item_id']);
             }
+
+            $delete_order_items=$_POST['hiddenelement'];
+            //echo "<pre>";print_r($delete_order_items);die();
+            if(isset($delete_order_items)){
+               foreach ($delete_order_items as $key => $value) {
+                  
+                  $delete_id=$order->delete_order_items($value); 
+               }
+            }
+            //die();
+
             if($item_id!==''){
                redirect(base_url('orders'));
             }else{

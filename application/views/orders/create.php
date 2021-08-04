@@ -5,6 +5,7 @@
 <body>
 <form method="post" action="<?php echo base_url('ordersCreate');?>">
 <div class="row">
+<div class="col-md-6" id="hidden" style="margin-left:90px;"></div>
 <div class="col-md-8 col-md-offset-2">
         <div id="showproduct" style="align:center"></div><br>
             <div class="form-group">
@@ -54,7 +55,7 @@ function myFunction() {
   label2.innerHTML = "Quantity";
   var button = document.createElement("button");
   button.innerHTML = "Delete";
-  
+  var input_hiddennew = document.createElement("input");
   //h.appendChild(t);
   document.getElementById("show").appendChild(label1);
   document.getElementById("show").appendChild(input1);
@@ -69,6 +70,7 @@ function myFunction() {
   document.getElementById("show").appendChild(label2);
   document.getElementById("show").appendChild(input2);
   document.getElementById("show").appendChild(br2);
+  document.getElementById("hidden").appendChild(input_hiddennew);
   input2.setAttribute("id", "qty"+m);
   input2.setAttribute("name", "order_items["+m+"][qty]");
   input2.setAttribute("class", "form-control");
@@ -84,12 +86,19 @@ function myFunction() {
   button.setAttribute("value", m);
   button.setAttribute("style", "margin-left:650px;");
   button.onclick = function() {addremoveitem(this.value);};
+
+  input_hiddennew.setAttribute("id", "newhiddenelement"+m);
+  input_hiddennew.setAttribute("type","hidden");
+  input_hiddennew.setAttribute("name", "new_item_name["+m+"][newhiddenelement]");
+  input_hiddennew.setAttribute("class", "form-control");
+  input_hiddennew.setAttribute("style", "margin-left:180px;");
+  input_hiddennew.setAttribute("value", );
 }
 
 function addremoveitem(rowid){
     //alert(rowid);
     if(rowid!==''){
-        //document.getElementById("newhiddenelement"+rowid).value = rowid;
+        document.getElementById("newhiddenelement"+rowid).value = "Deleted";
         document.getElementById("item_name"+rowid).style.display = "none";
         document.getElementById("newitemlabel"+rowid).style.display = "none";
         document.getElementById("newquantitylabel"+rowid).style.display = "none";
