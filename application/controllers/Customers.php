@@ -58,7 +58,7 @@ class Customers extends CI_Controller {
         }
     }
 
-    public function delete_order($id) {
+    public function delete_customer($id) {
       $this->db->from("customers");
       $this->db->where('customers.customer_id', $id);
       $this->db->delete('customers');

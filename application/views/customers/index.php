@@ -37,7 +37,7 @@
           <td><?php echo $value->customer_mobile; ?></td>
           <td><?php echo $value->customer_email; ?></td>
       <td>
-        <form method="DELETE" action="<?php echo base_url('customers/delete_order/'.$value->customer_id);?>">
+        <form method="DELETE" action="<?php echo base_url('customers/delete_customer/'.$value->customer_id);?>">
           <button type="submit" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i></button>
         </form>
       </td>     
