@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="<?php echo base_url()?>assets/order_items_create.js"></script>
+<script src="<?php echo base_url()?>assets/js/order_items_create.js"></script>
 </head>
 <body>
 <form method="post" action="<?php echo base_url('ordersCreate');?>">

@@ -5,7 +5,7 @@
     var order_items_obj='<?php echo json_encode($order_items) ?>';
     var order_items= JSON.parse(order_items_obj);
     </script>
-    <script src="<?php echo base_url()?>assets/order_items_edit.js"></script>
+    <script src="<?php echo base_url()?>assets/js/order_items_edit.js"></script>
 </head>
 <body onload="get_order_items(order_items_count,order_items)">
 <form method="post" action="<?php echo base_url('orders/update/'.$orders->order_id);?>">
